@@ -81,7 +81,8 @@ namespace pomidor
             (this.notifyIcon1.ContextMenuStrip.Items[2] as ToolStripMenuItem).DropDownItems.Add("Запустить длинный перерыв", null, this.StartLongBreak);
 
 
-
+            DirectoryInfo di = new DirectoryInfo("sounds\\");
+            di.Create();
             var f = Directory.GetFiles("sounds\\", "*.mp3");
             foreach(string f2 in f)
             {
