@@ -114,7 +114,7 @@ namespace pomidor
             switch (this.action)
             {
                 case enmAction.wait:
-                    timer1.Interval = 10000;
+                    timer1.Interval = 360000000;
                     action = enmAction.close;
                     break;
                 case Form_Nortification.enmAction.start:

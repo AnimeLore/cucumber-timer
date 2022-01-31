@@ -344,7 +344,14 @@ namespace pomidor
             timerx.Tick += new EventHandler(Timer_Tick);
             TimersShow();
             this.notifyIcon1.ContextMenuStrip.Items[0].Text = "Приостановить таймер";
-            this.notifyIcon1.Icon = new Icon("images/delay.ico");
+            if (System.IO.File.Exists("images/delay.ico"))
+            {
+                this.notifyIcon1.Icon = new Icon("images/delay.ico");
+            }
+            else
+            {
+                this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+            }
         }
 
         public void StartBreak(object sender, EventArgs e)
@@ -357,7 +364,14 @@ namespace pomidor
             timerx.Tick += new EventHandler(Timer_Tick);
             TimersShow();
             this.notifyIcon1.ContextMenuStrip.Items[0].Text = "Приостановить таймер";
-            this.notifyIcon1.Icon = new Icon("images/delay.ico");
+            if (System.IO.File.Exists("images/delay.ico"))
+            {
+                this.notifyIcon1.Icon = new Icon("images/delay.ico");
+            }
+            else
+            {
+                this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+            }
         }
 
         public void StartFocus(object sender, EventArgs e)
@@ -370,7 +384,13 @@ namespace pomidor
             timerx.Tick += new EventHandler(Timer_Tick);
             TimersShow();
             this.notifyIcon1.ContextMenuStrip.Items[0].Text = "Приостановить таймер";
-            this.notifyIcon1.Icon = new Icon("images/focus.ico");
+            if (System.IO.File.Exists("images/focus.ico"))
+            {
+                this.notifyIcon1.Icon = new Icon("images/focus.ico");
+            } else
+            {
+                this.notifyIcon1.Icon = pomidor.Properties.Resources.focus;
+            }
             if (f1_sound != "нет")
             {
                 wplayer.URL = "sounds/" + f1_sound + ".mp3";
@@ -401,14 +421,21 @@ namespace pomidor
                 }
                 if (_timer_pause)
                 {
-                    notifyIcon1.Text += "\nСтатус: Приостановлен";
+                    notifyIcon1.Text += "\nСтатус: Пауза";
                 }
                 else
                 {
                     notifyIcon1.Text += "\nСтатус: Активен";
                 }
                 notifyIcon1.Text += "\nОсталось: " + date.ToString("HH:mm:ss");
-                this.notifyIcon1.Icon = new Icon("images/pause.ico");
+                if (System.IO.File.Exists("images/pause.ico"))
+                {
+                    this.notifyIcon1.Icon = new Icon("images/pause.ico");
+                }
+                else
+                {
+                    this.notifyIcon1.Icon = pomidor.Properties.Resources.pause;
+                }
             }
             else
             {
@@ -419,13 +446,34 @@ namespace pomidor
                 this.notifyIcon1.ContextMenuStrip.Items[0].Text = "Приостановить таймер";
                 switch (_timer_type) {
                     case 1:
-                        this.notifyIcon1.Icon = new Icon("images/focus.ico");
+                        if (System.IO.File.Exists("images/focus.ico"))
+                        {
+                            this.notifyIcon1.Icon = new Icon("images/focus.ico");
+                        }
+                        else
+                        {
+                            this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+                        }
                         break;
                     case 2:
-                        this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                        if (System.IO.File.Exists("images/delay.ico"))
+                        {
+                            this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                        }
+                        else
+                        {
+                            this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+                        }
                         break;
                     case 3:
-                        this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                        if (System.IO.File.Exists("images/delay.ico"))
+                        {
+                            this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                        }
+                        else
+                        {
+                            this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+                        }
                         break;
                 }
                 
@@ -443,7 +491,14 @@ namespace pomidor
                 TimersHide();
                 this.notifyIcon1.ContextMenuStrip.Items[0].Text = "Приостановить таймер";
                 notifyIcon1.Text = "Нет активных таймеров.";
-                this.notifyIcon1.Icon = new Icon("images/none.ico");
+                if (System.IO.File.Exists("images/none.ico"))
+                {
+                    this.notifyIcon1.Icon = new Icon("images/none.ico");
+                }
+                else
+                {
+                    this.notifyIcon1.Icon = pomidor.Properties.Resources.none;
+                }
             }
 
         }
@@ -463,15 +518,36 @@ namespace pomidor
                         default:
                             stopTime = DateTimeOffset.Now.AddMinutes(focus_time).ToUnixTimeSeconds();
                             _timer_type = 1;
-                            this.notifyIcon1.Icon = new Icon("images/focus.ico");
+                            if (System.IO.File.Exists("images/focus.ico"))
+                            {
+                                this.notifyIcon1.Icon = new Icon("images/focus.ico");
+                            }
+                            else
+                            {
+                                this.notifyIcon1.Icon = pomidor.Properties.Resources.focus;
+                            }
                             break;
                         case 2:
                             stopTime = DateTimeOffset.Now.AddMinutes(break_time).ToUnixTimeSeconds();
-                            this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                            if (System.IO.File.Exists("images/delay.ico"))
+                            {
+                                this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                            }
+                            else
+                            {
+                                this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+                            }
                             break;
                         case 3:
                             stopTime = DateTimeOffset.Now.AddMinutes(long_break_time).ToUnixTimeSeconds();
-                            this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                            if (System.IO.File.Exists("images/delay.ico"))
+                            {
+                                this.notifyIcon1.Icon = new Icon("images/delay.ico");
+                            }
+                            else
+                            {
+                                this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+                            }
                             break;
                     }
                     timerx.Enabled = true;
@@ -496,7 +572,14 @@ namespace pomidor
                 TimersHide();
                 this.notifyIcon1.ContextMenuStrip.Items[0].Text = "Приостановить таймер";
                 notifyIcon1.Text = "Нет активных таймеров.";
-                this.notifyIcon1.Icon = new Icon("images/none.ico");
+                if (System.IO.File.Exists("images/none.ico"))
+                {
+                    this.notifyIcon1.Icon = new Icon("images/none.ico");
+                }
+                else
+                {
+                    this.notifyIcon1.Icon = pomidor.Properties.Resources.none;
+                }
 
                 switch (_timer_type)
                 {
@@ -588,7 +671,7 @@ namespace pomidor
                 }
                 if (_timer_pause)
                 {
-                    notifyIcon1.Text += "\nСтатус: Приостановлен";
+                    notifyIcon1.Text += "\nСтатус: Пауза";
                 } else
                 {
                     notifyIcon1.Text += "\nСтатус: Активен";
