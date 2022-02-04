@@ -63,6 +63,7 @@ namespace pomidor
 
             this.ShowInTaskbar = false;
             this.WindowState = FormWindowState.Minimized;
+            this.Visible = false;
 
 
 
@@ -313,6 +314,7 @@ namespace pomidor
             this.button3.BackColor = System.Drawing.Color.SeaGreen;
             this.button4.BackColor = System.Drawing.Color.MediumSeaGreen;
             this.Focus();
+            this.Visible = true;
             this.WindowState = FormWindowState.Normal;
         }
 
@@ -854,6 +856,7 @@ namespace pomidor
         private void button2_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+            this.Visible = false;
         }
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
