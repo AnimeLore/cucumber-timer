@@ -889,6 +889,7 @@ namespace pomidor
                 command = new SqliteCommand("SELECT * FROM timers WHERE (date-(date%31556926))/31556926 = " + Convert.ToString(new DateTimeOffset(year, 1, 1, 0, 0, 0, 0, DateTimeOffset.Now.Offset).ToUnixTimeSeconds() / 31556926) + " AND type = 1", connection);
                 int[] days = new int[366];
                 bool visokos = true;
+                int skip_days = (new DateTime(year, 1, 1).DayOfWeek == 0) ? 6 : (int)new DateTime(year, 1, 1).DayOfWeek-1;
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows) // если есть данные
@@ -905,6 +906,11 @@ namespace pomidor
                 tableLayoutPanel1.SuspendLayout();
                 foreach (Control cell in tableLayoutPanel1.Controls)
                 {
+                    if(skip_days>0)
+                    {
+                        skip_days--;
+                        continue;
+                    }
                     if (days[current_day] == 0)
                     {
                         cell.BackColor = System.Drawing.Color.White;
