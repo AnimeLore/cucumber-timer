@@ -455,7 +455,7 @@ namespace pomidor
                         }
                         else
                         {
-                            this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+                            this.notifyIcon1.Icon = pomidor.Properties.Resources.focus;
                         }
                         break;
                     case 2:
