@@ -97,9 +97,9 @@ namespace pomidor
 
                 current_t = Convert.ToInt32(command.ExecuteScalar());
                 this.label1.Text = Convert.ToString(current_t)+" Кукумберов за сегодня";
-                if (current_n / long_break_n != current_lb + 1)
+                if (long_break_n-current_n % long_break_n != 4)
                 {
-                    this.label1.Text += "\n" + Convert.ToString(current_n / long_break_n - current_lb + 1) + " до длинного перерыва";
+                    this.label1.Text += "\n" + Convert.ToString(long_break_n-current_n % long_break_n) + " до длинного перерыва";
                 }
             }
 
