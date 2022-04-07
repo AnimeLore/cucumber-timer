@@ -299,7 +299,7 @@ namespace pomidor
                 this.comboBox5.SelectedIndex = 0;
             } else
             {
-                this.comboBox5.SelectedIndex = long_break_n+1;
+                this.comboBox5.SelectedIndex = long_break_n;
             }
             this.comboBox1.SelectedItem = f1_sound;
             this.comboBox2.SelectedItem = f2_sound;
