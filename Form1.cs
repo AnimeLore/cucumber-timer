@@ -294,12 +294,12 @@ namespace pomidor
         private void OpenSettings(object sender, EventArgs e)
         {
             tabControl1.SelectedIndex = 0;
-            if(long_break_n == -1)
+            if(long_break_n<0)
             {
                 this.comboBox5.SelectedIndex = 0;
             } else
             {
-                this.comboBox5.SelectedIndex = long_break_n;
+                this.comboBox5.SelectedIndex = long_break_n+1;
             }
             this.comboBox1.SelectedItem = f1_sound;
             this.comboBox2.SelectedItem = f2_sound;
@@ -604,7 +604,7 @@ namespace pomidor
                                 wplayer.URL = "sounds/" + f2_sound + ".mp3";
                                 wplayer.controls.play();
                             }
-                            if (current_n/long_break_n == current_lb + 1)
+                            if ((current_n+current_lb)%long_break_n == long_break_n-1)
                             {
                                 _timer_type = 3;
                                 Nortification("", 3);
@@ -716,6 +716,11 @@ namespace pomidor
         private void TextBox1_TextChanged(object sender, EventArgs e)
         {
             string txt = this.textBox1.Text;
+            if (txt == "")
+            {
+                txt = "1";
+                this.textBox1.Text = txt;
+            }
             using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
                 connection.Open();
@@ -736,6 +741,11 @@ namespace pomidor
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             string txt = this.textBox2.Text;
+            if(txt == "")
+            {
+                txt = "1";
+                this.textBox2.Text = txt;
+            }
             using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
                 connection.Open();
@@ -756,6 +766,11 @@ namespace pomidor
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             string txt = this.textBox3.Text;
+            if( txt == "")
+            {
+                txt = "1";
+                this.textBox3.Text = txt;
+            }
             using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
                 connection.Open();
