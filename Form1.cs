@@ -595,16 +595,19 @@ namespace pomidor
                             command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE (date-(date%86400))/86400 = " + Convert.ToString(DateTimeOffset.Now.ToUnixTimeSeconds() / 86400) + " AND type = 2", connection);
                             int current_n = 0;
                             int current_lb = 0;
+                            int current_t = 0;
                             current_n = Convert.ToInt32(command.ExecuteScalar());
                             command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE (date-(date%86400))/86400 = " + Convert.ToString(DateTimeOffset.Now.ToUnixTimeSeconds() / 86400) + " AND type = 3", connection);
                             
                             current_lb = Convert.ToInt32(command.ExecuteScalar());
+                            command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE (date-(date%86400))/86400 = " + Convert.ToString(DateTimeOffset.Now.ToUnixTimeSeconds() / 86400) + " AND type = 1", connection);
+                            current_t = Convert.ToInt32(command.ExecuteScalar());
                             if (f2_sound != "нет")
                             {
                                 wplayer.URL = "sounds/" + f2_sound + ".mp3";
                                 wplayer.controls.play();
                             }
-                            if ((current_n+current_lb)%long_break_n == long_break_n-1)
+                            if (current_t%long_break_n == 0)
                             {
                                 _timer_type = 3;
                                 Nortification("", 3);

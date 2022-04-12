@@ -98,12 +98,18 @@ namespace pomidor
                 current_t = Convert.ToInt32(command.ExecuteScalar());
                 this.label1.Text = Convert.ToString(current_t)+" Кукумберов за сегодня";
                 //System.Windows.Forms.MessageBox.Show(Convert.ToString(current_n)+' '+Convert.ToString(current_lb)+' ' +Convert.ToString(long_break_n)+ ' ' + Convert.ToString((current_n + current_lb) % long_break_n));
-                if ((current_n + current_lb) % long_break_n != long_break_n - 1)
+                if (current_t%long_break_n != 0)
                 {
-                    this.label1.Text += "\n" + Convert.ToString(Math.Abs(long_break_n-(current_n + current_lb) % long_break_n)-1) + " до длинного перерыва";
+                    this.label1.Text += "\n" + Convert.ToString(Math.Abs(long_break_n-(current_t%long_break_n))) + " до длинного перерыва";
                 } else
                 {
-                    this.label1.Text += "\nСледующий перерыв будет длинным";
+                    if (type != 2 && type != 1)
+                    {
+                        this.label1.Text += "\nСледующий перерыв будет длинным";
+                    } else if (type == 1)
+                    {
+                        this.label1.Text += "\n" + Convert.ToString(long_break_n) + " до длинного перерыва";
+                    }
                 }
             }
 
