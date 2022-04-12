@@ -35,6 +35,8 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -91,6 +93,7 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
@@ -111,6 +114,19 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Цикл завершен!";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("MS Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(190, 31);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(97, 20);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "00:00:00";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Form_Nortification
             // 
@@ -139,5 +155,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Timer timer2;
     }
 }

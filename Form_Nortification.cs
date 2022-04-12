@@ -24,6 +24,7 @@ namespace pomidor
         public event StartBreak startBreak;
         public event StartLongBreak startLong;
         private int _timer_type = 0;
+        private int time_offset = 0;
         public Form_Nortification(Form1 f1)
         {
             InitializeComponent();
@@ -124,10 +125,14 @@ namespace pomidor
             switch (this.action)
             {
                 case enmAction.wait:
+                    timer2.Tick += timer2_Tick;
+                    timer2.Interval = 1000;
+                    timer2.Start();
                     timer1.Interval = 360000000;
                     action = enmAction.close;
                     break;
                 case Form_Nortification.enmAction.start:
+                    timer2.Stop();
                     this.timer1.Interval = 1;
                     this.Opacity += 0.1;
                     if (this.x < this.Location.X)
@@ -143,6 +148,7 @@ namespace pomidor
                     }
                     break;
                 case enmAction.close:
+                    timer2.Stop();
                     timer1.Interval = 1;
                     this.Opacity -= 0.1;
 
@@ -154,7 +160,12 @@ namespace pomidor
                     break;
             }
         }
-
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            time_offset += 1;
+            TimeSpan result = TimeSpan.FromSeconds(time_offset);
+            label3.Text= result.ToString("hh':'mm':'ss");
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             switch (_timer_type)
@@ -171,6 +182,11 @@ namespace pomidor
             }
             timer1.Interval = 1;
             this.action = enmAction.close;
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void button2_Click(object sender, EventArgs e)
