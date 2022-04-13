@@ -112,7 +112,7 @@ namespace pomidor
                     var SQL = "CREATE TABLE \"timers\" (\"date\"  INTEGER NOT NULL,\"type\"  INTEGER NOT NULL,\"id\"    INTEGER NOT NULL UNIQUE,\"length\"    INTEGER NOT NULL,\"start\" INTEGER NOT NULL,\"end\"   INTEGER NOT NULL,PRIMARY KEY(\"id\" AUTOINCREMENT))";
                     command.CommandText = SQL;
                     _ = command.ExecuteNonQuery();
-                    SQL = "CREATE TABLE \"user_pref\" (\"id\"    INTEGER NOT NULL,\"focus_time\"    INTEGER NOT NULL DEFAULT 25,\"break_time\"    INTEGER NOT NULL DEFAULT 5,\"lbreak_time\"   INTEGER NOT NULL DEFAULT 15,\"before_lbreak\" INTEGER NOT NULL DEFAULT 4,\"f1_sound\"  TEXT DEFAULT \'нет\',\"f2_sound\"  TEXT DEFAULT \'нет\',\"b_sound\"   TEXT DEFAULT \'нет\',\"lb_sound\"  TEXT DEFAULT \'нет\')";
+                    SQL = "CREATE TABLE \"user_pref\" (\"id\"    INTEGER NOT NULL,\"focus_time\"    INTEGER NOT NULL DEFAULT 25,\"break_time\"    INTEGER NOT NULL DEFAULT 5,\"lbreak_time\"   INTEGER NOT NULL DEFAULT 15,\"before_lbreak\" INTEGER NOT NULL DEFAULT 4,\"f1_sound\"  TEXT DEFAULT \'нет\',\"f2_sound\"  TEXT DEFAULT \'нет\',\"b_sound\"   TEXT DEFAULT \'нет\',\"lb_sound\"  TEXT DEFAULT \'нет\', \"nort_timer\"  INTEGER DEFAULT 1, \"nort_lb_logic\"  INTEGER DEFAULT 0)";
                     command.CommandText = SQL;
                     _ = command.ExecuteNonQuery();
                     SQL = "INSERT INTO user_pref(id) VALUES(0)";
