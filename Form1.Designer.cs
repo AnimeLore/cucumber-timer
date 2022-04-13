@@ -428,6 +428,7 @@
             this.panel3.Size = new System.Drawing.Size(16, 37);
             this.panel3.TabIndex = 7;
             this.panel3.Visible = false;
+            this.panel3.MouseHover += new System.EventHandler(this.p3_Mhover);
             // 
             // label13
             // 

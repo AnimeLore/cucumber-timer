@@ -1111,5 +1111,10 @@ namespace pomidor
         }
 
         #endregion
+
+        private void p3_Mhover(object sender, EventArgs e)
+        {
+            panel3.Visible = false;
+        }
     }
 }
