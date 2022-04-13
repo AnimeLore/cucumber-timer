@@ -97,21 +97,35 @@ namespace pomidor
                 command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE (date-(date%86400))/86400 = " + Convert.ToString(DateTimeOffset.Now.ToUnixTimeSeconds() / 86400) + " AND type = 1", connection);
 
                 current_t = Convert.ToInt32(command.ExecuteScalar());
+                command = new SqliteCommand("SELECT nort_lb_logic FROM user_pref WHERE id=0", connection);
+
+                bool lb_logic = Convert.ToBoolean(command.ExecuteScalar());
                 this.label1.Text = Convert.ToString(current_t)+" Кукумберов за сегодня";
                 //System.Windows.Forms.MessageBox.Show(Convert.ToString(current_n)+' '+Convert.ToString(current_lb)+' ' +Convert.ToString(long_break_n)+ ' ' + Convert.ToString((current_n + current_lb) % long_break_n));
-                if (current_t%long_break_n != 0)
+                if (current_t % long_break_n != 0 && !lb_logic)
                 {
-                    this.label1.Text += "\n" + Convert.ToString(Math.Abs(long_break_n-(current_t%long_break_n))) + " до длинного перерыва";
-                } else
+                    this.label1.Text += "\n" + Convert.ToString(Math.Abs(long_break_n - (current_t % long_break_n))) + " до длинного перерыва";
+                } else if ((current_n + current_lb) % long_break_n != long_break_n -1 && lb_logic) {
+                    this.label1.Text += "\n" + Convert.ToString(Math.Abs(long_break_n - (current_n + current_lb) % long_break_n) - 1) + " до длинного перерыва";
+                }
+                else
                 {
                     if (type != 2 && type != 1)
                     {
-                        this.label1.Text += "\nСледующий перерыв будет длинным";
-                    } else if (type == 1)
+                        
+                    } else if (type == 1 && !lb_logic)
                     {
                         this.label1.Text += "\n" + Convert.ToString(long_break_n) + " до длинного перерыва";
                     }
                 }
+                command = new SqliteCommand("SELECT nort_timer FROM user_pref WHERE id=0", connection);
+
+                bool ofs_timer = Convert.ToBoolean(command.ExecuteScalar());
+                if (!ofs_timer)
+                {
+                    label3.Visible= false;
+                }
+                connection.Close();
             }
 
             this.Show();

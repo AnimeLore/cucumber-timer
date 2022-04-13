@@ -24,6 +24,8 @@ namespace pomidor
         string f2_sound = "";
         string b_sound = "";
         string lb_sound = "";
+        bool ofs_timer = true;
+        bool lb_logic = false;
         private bool _timer_work = false;
         private bool _timer_pause = false;
         private short _timer_type = 0;
@@ -64,7 +66,6 @@ namespace pomidor
             this.ShowInTaskbar = false;
             this.WindowState = FormWindowState.Minimized;
             this.Visible = false;
-
 
 
             this.notifyIcon1.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
@@ -120,6 +121,7 @@ namespace pomidor
                     connection.Close();
                 }
             }
+            fixDataBase();
             using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
                 connection.Open();
@@ -141,6 +143,8 @@ namespace pomidor
                             f2_sound = Convert.ToString(reader.GetValue(6));
                             b_sound = Convert.ToString(reader.GetValue(7));
                             lb_sound = Convert.ToString(reader.GetValue(8));
+                            ofs_timer = Convert.ToBoolean(reader.GetValue(9));
+                            lb_logic = Convert.ToBoolean(reader.GetValue(10));
                         }
                     }
                 }
@@ -182,6 +186,39 @@ namespace pomidor
             _ = comboBox6.Items.Add(DateTimeOffset.Now.Year);
             comboBox6.SelectedItem = DateTimeOffset.Now.Year;
 
+        }
+
+        private void fixDataBase()
+        {
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
+            {
+                connection.Open();
+                SqliteCommand command = new SqliteCommand
+                {
+                    Connection = connection
+                };
+                #region --# nort_timer #--
+                command = new SqliteCommand(" ALTER TABLE user_pref ADD nort_timer INTEGER NOT NULL DEFAULT 1", connection);
+                try
+                {
+                    command.ExecuteNonQuery();
+                } catch { 
+                
+                }
+                #endregion
+                #region --# nort_lb_logic #--
+                command = new SqliteCommand(" ALTER TABLE user_pref ADD nort_lb_logic INTEGER NOT NULL DEFAULT 0", connection); // 0 - обработка по кукумберам, 1 - обработка по перерывам
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+                #endregion
+                connection.Close();
+            }
         }
 
         private void ImportDataBase(object sender, EventArgs e)
@@ -294,7 +331,38 @@ namespace pomidor
         private void OpenSettings(object sender, EventArgs e)
         {
             tabControl1.SelectedIndex = 0;
-            if(long_break_n<0)
+            string[] installs;
+            if (!lb_logic)
+            {
+                installs = new string[] { "никогда",
+"через каждый кукумбер",
+"через каждый 2-ой кукумбер",
+"через каждый 3-ий кукумбер",
+"через каждый 4-ый кукумбер",
+"через каждый 5-ый кукумбер",
+"через каждый 6-ой кукумбер",
+"через каждый 7-ой кукумбер",
+"через каждый 8-ой кукумбер",
+"через каждый 9-ый кукумбер",
+"через каждый 10-ый кукумбер"};
+            }
+            else
+            {
+                installs = new string[] { "никогда",
+"каждый перерыв",
+"каждый 2-ой перерыв",
+"каждый 3-ий перерыв",
+"каждый 4-ый перерыв",
+"каждый 5-ый перерыв",
+"каждый 6-ой перерыв",
+"каждый 7-ой перерыв",
+"каждый 8-ой перерыв",
+"каждый 9-ый перерыв",
+"каждый 10-ый перерыв"};
+            }
+            comboBox5.Items.Clear();
+            comboBox5.Items.AddRange(installs);
+            if (long_break_n<0)
             {
                 this.comboBox5.SelectedIndex = 0;
             } else
@@ -311,6 +379,8 @@ namespace pomidor
             this.groupBox2.Visible = true;
             this.groupBox3.Visible = true;
             this.groupBox4.Visible = true;
+            this.offsetTimer.Checked = ofs_timer;
+            this.lbLogic.Checked = lb_logic;
             this.button3.BackColor = System.Drawing.Color.SeaGreen;
             this.button4.BackColor = System.Drawing.Color.MediumSeaGreen;
             this.Focus();
@@ -607,7 +677,7 @@ namespace pomidor
                                 wplayer.URL = "sounds/" + f2_sound + ".mp3";
                                 wplayer.controls.play();
                             }
-                            if (current_t%long_break_n == 0)
+                            if ((current_t%long_break_n == 0 && !lb_logic) || ((current_n + current_lb) % long_break_n == long_break_n - 1 && lb_logic))
                             {
                                 _timer_type = 3;
                                 Nortification("", 3);
@@ -1115,6 +1185,45 @@ namespace pomidor
         private void p3_Mhover(object sender, EventArgs e)
         {
             panel3.Visible = false;
+        }
+
+        private void offsetTimer_CheckedChanged(object sender, EventArgs e)
+        {
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
+            {
+                connection.Open();
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                command.CommandText = "UPDATE user_pref SET nort_timer = ";
+                command.CommandText += Convert.ToInt32(offsetTimer.Checked) + " WHERE id=0";
+                command.ExecuteNonQuery();
+                ofs_timer = offsetTimer.Checked;
+
+                connection.Close();
+
+
+            }
+        }
+
+        private void lbLogic_CheckedChanged(object sender, EventArgs e)
+        {
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
+            {
+                connection.Open();
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                command.CommandText = "UPDATE user_pref SET nort_lb_logic = ";
+                command.CommandText += Convert.ToInt32(lbLogic.Checked) + " WHERE id=0";
+                command.ExecuteNonQuery();
+                lb_logic = lbLogic.Checked;
+
+                connection.Close();
+
+
+            }
+            OpenSettings(sender,e);
         }
     }
 }
