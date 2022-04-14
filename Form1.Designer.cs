@@ -63,6 +63,12 @@
             this.lbLogic = new System.Windows.Forms.CheckBox();
             this.offsetTimer = new System.Windows.Forms.CheckBox();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.playerSettingsGroup = new System.Windows.Forms.GroupBox();
+            this.pauseMusicBreak = new System.Windows.Forms.CheckBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.repeatPlaylist = new System.Windows.Forms.CheckBox();
+            this.playlistFolder = new System.Windows.Forms.TextBox();
+            this.playerEnabled = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
@@ -82,6 +88,8 @@
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            this.playerSettingsGroup.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -494,11 +502,86 @@
             // tabPage6
             // 
             this.tabPage6.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage6.Controls.Add(this.playerSettingsGroup);
+            this.tabPage6.Controls.Add(this.playerEnabled);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Size = new System.Drawing.Size(584, 370);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Плеер";
+            // 
+            // playerSettingsGroup
+            // 
+            this.playerSettingsGroup.Controls.Add(this.pauseMusicBreak);
+            this.playerSettingsGroup.Controls.Add(this.label14);
+            this.playerSettingsGroup.Controls.Add(this.repeatPlaylist);
+            this.playerSettingsGroup.Controls.Add(this.playlistFolder);
+            this.playerSettingsGroup.Enabled = false;
+            this.playerSettingsGroup.Location = new System.Drawing.Point(23, 52);
+            this.playerSettingsGroup.Margin = new System.Windows.Forms.Padding(2);
+            this.playerSettingsGroup.Name = "playerSettingsGroup";
+            this.playerSettingsGroup.Padding = new System.Windows.Forms.Padding(2);
+            this.playerSettingsGroup.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.playerSettingsGroup.Size = new System.Drawing.Size(537, 100);
+            this.playerSettingsGroup.TabIndex = 3;
+            this.playerSettingsGroup.TabStop = false;
+            this.playerSettingsGroup.Text = "Настройки плеера";
+            // 
+            // pauseMusicBreak
+            // 
+            this.pauseMusicBreak.AutoSize = true;
+            this.pauseMusicBreak.Checked = true;
+            this.pauseMusicBreak.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.pauseMusicBreak.Location = new System.Drawing.Point(7, 48);
+            this.pauseMusicBreak.Name = "pauseMusicBreak";
+            this.pauseMusicBreak.Size = new System.Drawing.Size(272, 17);
+            this.pauseMusicBreak.TabIndex = 9;
+            this.pauseMusicBreak.Text = "Приостанавливать музыку во время перерывов";
+            this.pauseMusicBreak.UseVisualStyleBackColor = true;
+            this.pauseMusicBreak.CheckedChanged += new System.EventHandler(this.pauseMusicBreak_CheckedChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(4, 74);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(217, 13);
+            this.label14.TabIndex = 8;
+            this.label14.Text = "Название папки с плейлистом (музыкой)";
+            // 
+            // repeatPlaylist
+            // 
+            this.repeatPlaylist.AutoSize = true;
+            this.repeatPlaylist.Checked = true;
+            this.repeatPlaylist.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.repeatPlaylist.Location = new System.Drawing.Point(7, 25);
+            this.repeatPlaylist.Name = "repeatPlaylist";
+            this.repeatPlaylist.Size = new System.Drawing.Size(119, 17);
+            this.repeatPlaylist.TabIndex = 7;
+            this.repeatPlaylist.Text = "Повтор плейлиста";
+            this.repeatPlaylist.UseVisualStyleBackColor = true;
+            this.repeatPlaylist.CheckedChanged += new System.EventHandler(this.repeatPlaylist_CheckedChanged);
+            // 
+            // playlistFolder
+            // 
+            this.playlistFolder.Location = new System.Drawing.Point(297, 71);
+            this.playlistFolder.Margin = new System.Windows.Forms.Padding(2);
+            this.playlistFolder.Name = "playlistFolder";
+            this.playlistFolder.Size = new System.Drawing.Size(236, 20);
+            this.playlistFolder.TabIndex = 0;
+            this.playlistFolder.Text = "playlist";
+            // 
+            // playerEnabled
+            // 
+            this.playerEnabled.AutoSize = true;
+            this.playerEnabled.Location = new System.Drawing.Point(23, 19);
+            this.playerEnabled.Name = "playerEnabled";
+            this.playerEnabled.Size = new System.Drawing.Size(299, 17);
+            this.playerEnabled.TabIndex = 1;
+            this.playerEnabled.Text = "Включить плеер (необходим перезапуск приложения)";
+            this.playerEnabled.UseVisualStyleBackColor = true;
+            this.playerEnabled.CheckedChanged += new System.EventHandler(this.playerEnabled_CheckedChanged);
             // 
             // tabPage2
             // 
@@ -703,6 +786,10 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
+            this.playerSettingsGroup.ResumeLayout(false);
+            this.playerSettingsGroup.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -757,6 +844,12 @@
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.CheckBox lbLogic;
         private System.Windows.Forms.CheckBox offsetTimer;
+        private System.Windows.Forms.GroupBox playerSettingsGroup;
+        private System.Windows.Forms.CheckBox playerEnabled;
+        private System.Windows.Forms.CheckBox pauseMusicBreak;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox repeatPlaylist;
+        private System.Windows.Forms.TextBox playlistFolder;
     }
 }
 

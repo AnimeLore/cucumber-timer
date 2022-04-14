@@ -19,10 +19,12 @@ namespace pomidor
         public delegate void StartFocus(object sender, EventArgs e);
         public delegate void StartBreak(object sender, EventArgs e);
         public delegate void StartLongBreak(object sender, EventArgs e);
+        public delegate void pl_sc();
         public event StopClick stopTimer;
         public event StartFocus startFocus;
         public event StartBreak startBreak;
         public event StartLongBreak startLong;
+        public event pl_sc pl_scf;
         private int _timer_type = 0;
         private int time_offset = 0;
         public Form_Nortification(Form1 f1)
@@ -32,6 +34,7 @@ namespace pomidor
             startFocus += f1.StartFocus;
             startBreak += f1.StartBreak;
             startLong += f1.StartLongBreak;
+            pl_scf += f1.pl_sc;
             this.TopMost = true;
         }
         public enum enmAction
@@ -206,6 +209,7 @@ namespace pomidor
         private void button2_Click(object sender, EventArgs e)
         {
             stopTimer(sender, e);
+            pl_scf();
             timer1.Interval = 1;
             this.action = enmAction.close;
         }
