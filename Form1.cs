@@ -24,12 +24,18 @@ namespace pomidor
         string f2_sound = "";
         string b_sound = "";
         string lb_sound = "";
+        string pl_folder = "playlist";
         bool ofs_timer = true;
         bool lb_logic = false;
+        bool pl_status = false;
+        bool pl_repeat = true;
+        bool pl_break = true;
+        bool pl_paused =false;
         private bool _timer_work = false;
         private bool _timer_pause = false;
         private short _timer_type = 0;
         readonly WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+        readonly WMPLib.WindowsMediaPlayer pl_main = new WMPLib.WindowsMediaPlayer();
         public Form1()
         {
             InitializeComponent();
@@ -82,8 +88,9 @@ namespace pomidor
             (this.notifyIcon1.ContextMenuStrip.Items[2] as ToolStripMenuItem).DropDownItems.Add("Запустить перерыв", null, this.StartBreak);
             (this.notifyIcon1.ContextMenuStrip.Items[2] as ToolStripMenuItem).DropDownItems.Add("Запустить длинный перерыв", null, this.StartLongBreak);
 
-
-            DirectoryInfo di = new DirectoryInfo("sounds\\");
+            DirectoryInfo di = new DirectoryInfo("playlist\\");
+            di.Create();
+            di = new DirectoryInfo("sounds\\");
             di.Create();
             var f = Directory.GetFiles("sounds\\", "*.mp3");
             foreach(string f2 in f)
@@ -94,6 +101,32 @@ namespace pomidor
                 this.comboBox3.Items.Add(temp);
                 this.comboBox4.Items.Add(temp);
             }
+            if (!System.IO.Directory.Exists(pl_folder))
+            {
+                using (var connection = new SqliteConnection("Data Source=userdata.db"))
+                {
+                    connection.Open();
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+
+                    MessageBox.Show("Указанная папка не существует, установлена папка по умолчанию - playlist.");
+                    pl_folder = "playlist";
+                    command.CommandText = "UPDATE user_pref SET pl_folder = \"playlist\" WHERE id=0";
+                    command.ExecuteNonQuery();
+                    connection.Close();
+
+
+                }
+            }
+            pl_main.currentPlaylist = pl_main.newPlaylist("main", "");
+            f = Directory.GetFiles(pl_folder+"\\", "*.mp3");
+            foreach (string f1 in f)
+            {
+                pl_main.currentPlaylist.appendItem(pl_main.newMedia(f1));
+            }
+            pl_main.settings.setMode("shuffle", true);
+            pl_main.settings.setMode("loop", pl_repeat);
+
 
 
 
@@ -145,6 +178,16 @@ namespace pomidor
                             lb_sound = Convert.ToString(reader.GetValue(8));
                             ofs_timer = Convert.ToBoolean(reader.GetValue(9));
                             lb_logic = Convert.ToBoolean(reader.GetValue(10));
+                            pl_status = Convert.ToBoolean(reader.GetValue(11));
+                            pl_repeat = Convert.ToBoolean(reader.GetValue(12));
+                            pl_break = Convert.ToBoolean(reader.GetValue(13));
+                            pl_folder = Convert.ToString(reader.GetValue(14));
+
+                            if (pl_status && this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 2].Text != "Следующий трек")
+                            {
+                                this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Приостановить плеер", null, pl_pause));
+                                this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Следующий трек", null, pl_nextTrack));
+                            }
                         }
                     }
                 }
@@ -208,6 +251,50 @@ namespace pomidor
                 #endregion
                 #region --# nort_lb_logic #--
                 command = new SqliteCommand(" ALTER TABLE user_pref ADD nort_lb_logic INTEGER NOT NULL DEFAULT 0", connection); // 0 - обработка по кукумберам, 1 - обработка по перерывам
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+                #endregion
+                #region --# pl_status #--
+                command = new SqliteCommand(" ALTER TABLE user_pref ADD pl_status INTEGER NOT NULL DEFAULT 0", connection); 
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+                #endregion
+                #region --# pl_repeat #--
+                command = new SqliteCommand(" ALTER TABLE user_pref ADD pl_repeat INTEGER NOT NULL DEFAULT 1", connection);
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+                #endregion
+                #region --# pl_break #--
+                command = new SqliteCommand(" ALTER TABLE user_pref ADD pl_break INTEGER NOT NULL DEFAULT 1", connection);
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+
+                }
+                #endregion
+                #region --# pl_folder #--
+                command = new SqliteCommand(" ALTER TABLE user_pref ADD pl_folder TEXT NOT NULL DEFAULT \"playlist\"", connection);
                 try
                 {
                     command.ExecuteNonQuery();
@@ -381,6 +468,10 @@ namespace pomidor
             this.groupBox4.Visible = true;
             this.offsetTimer.Checked = ofs_timer;
             this.lbLogic.Checked = lb_logic;
+            this.playerEnabled.Checked = pl_status;
+            this.repeatPlaylist.Checked = pl_repeat;
+            this.playlistFolder.Text = pl_folder;
+            this.pauseMusicBreak.Checked = pl_break;
             this.button3.BackColor = System.Drawing.Color.SeaGreen;
             this.button4.BackColor = System.Drawing.Color.MediumSeaGreen;
             this.Focus();
@@ -425,6 +516,10 @@ namespace pomidor
             {
                 this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
             }
+            if (pl_status && !pl_paused && pl_break)
+            {
+                pl_main.controls.pause();
+            }
         }
 
         public void StartBreak(object sender, EventArgs e)
@@ -444,6 +539,10 @@ namespace pomidor
             else
             {
                 this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+            }
+            if (pl_status && !pl_paused && pl_break)
+            {
+                pl_main.controls.pause();
             }
         }
 
@@ -468,6 +567,10 @@ namespace pomidor
             {
                 wplayer.URL = "sounds/" + f1_sound + ".mp3";
                 wplayer.controls.play();
+            }
+            if (pl_status && !pl_paused)
+            {
+                pl_main.controls.play();
             }
         }
 
@@ -509,6 +612,10 @@ namespace pomidor
                 {
                     this.notifyIcon1.Icon = pomidor.Properties.Resources.pause;
                 }
+                if (pl_status && !pl_paused && pl_break)
+                {
+                    pl_main.controls.pause();
+                }
             }
             else
             {
@@ -526,6 +633,10 @@ namespace pomidor
                         else
                         {
                             this.notifyIcon1.Icon = pomidor.Properties.Resources.focus;
+                        }
+                        if (pl_status && !pl_paused)
+                        {
+                            pl_main.controls.play();
                         }
                         break;
                     case 2:
@@ -572,7 +683,12 @@ namespace pomidor
                 {
                     this.notifyIcon1.Icon = pomidor.Properties.Resources.none;
                 }
+                if (pl_status && !pl_paused)
+                {
+                    pl_main.controls.pause();
+                }
             }
+
 
         }
 
@@ -599,6 +715,10 @@ namespace pomidor
                             {
                                 this.notifyIcon1.Icon = pomidor.Properties.Resources.focus;
                             }
+                            if (pl_status && !pl_paused)
+                            {
+                                pl_main.controls.play();
+                            }
                             break;
                         case 2:
                             stopTime = DateTimeOffset.Now.AddMinutes(break_time).ToUnixTimeSeconds();
@@ -610,6 +730,10 @@ namespace pomidor
                             {
                                 this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
                             }
+                            if (pl_status && !pl_paused && pl_break)
+                            {
+                                pl_main.controls.pause();
+                            }
                             break;
                         case 3:
                             stopTime = DateTimeOffset.Now.AddMinutes(long_break_time).ToUnixTimeSeconds();
@@ -620,6 +744,10 @@ namespace pomidor
                             else
                             {
                                 this.notifyIcon1.Icon = pomidor.Properties.Resources.delay;
+                            }
+                            if (pl_status && !pl_paused && pl_break)
+                            {
+                                pl_main.controls.pause();
                             }
                             break;
                     }
@@ -724,6 +852,7 @@ namespace pomidor
                         {
                             wplayer.URL = "sounds/" + f1_sound + ".mp3";
                             wplayer.controls.play();
+
                         }
                         Nortification("", 1);
                         StopClick(sender, e);
@@ -1224,6 +1353,112 @@ namespace pomidor
 
             }
             OpenSettings(sender,e);
+        }
+
+        private void playerEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+                using (var connection = new SqliteConnection("Data Source=userdata.db"))
+                {
+                    connection.Open();
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+
+                    command.CommandText = "UPDATE user_pref SET pl_status = ";
+                    command.CommandText += Convert.ToInt32(playerEnabled.Checked) + " WHERE id=0";
+                    command.ExecuteNonQuery();
+                if (!System.IO.Directory.Exists(pl_folder))
+                {
+                    MessageBox.Show("Указанная папка не существует, установлена папка по умолчанию - playlist.");
+                    pl_folder = "playlist";
+                    command.CommandText = "UPDATE user_pref SET pl_folder = \"playlist\" WHERE id=0";
+                    command.ExecuteNonQuery();
+                }
+                    pl_status = playerEnabled.Checked;
+
+                    connection.Close();
+
+
+                }
+                playerSettingsGroup.Enabled = pl_status;
+            if (playerEnabled.Checked)
+            {
+                if (this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 2].Text != "Следующий трек")
+                {
+                    this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Приостановить плеер", null, pl_pause));
+                    this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Следующий трек", null, pl_nextTrack));
+                }
+            }
+            else
+            {
+                this.notifyIcon1.ContextMenuStrip.Items.Remove(this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 1]);
+                this.notifyIcon1.ContextMenuStrip.Items.Remove(this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 1]);
+            }
+        }
+
+        private void pl_pause(object sender, EventArgs e)
+        {
+            pl_paused = true;
+            pl_main.controls.pause();
+            this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Text = "Возобновить плеер";
+            this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Click -= pl_pause;
+            this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Click += pl_unpause;
+            
+        }
+
+        private void pl_unpause(object sender, EventArgs e)
+        {
+            pl_paused = false;
+            pl_main.controls.play();
+            this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Text = "Приостановить плеер";
+            this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Click -= pl_unpause;
+            this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Click += pl_pause;
+        }
+
+        private void pl_nextTrack(object sender, EventArgs e)
+        {
+            pl_main.controls.next();
+        }
+
+        private void repeatPlaylist_CheckedChanged(object sender, EventArgs e)
+        {
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
+            {
+                connection.Open();
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                command.CommandText = "UPDATE user_pref SET pl_repeat = ";
+                command.CommandText += Convert.ToInt32(repeatPlaylist.Checked) + " WHERE id=0";
+                command.ExecuteNonQuery();
+                pl_repeat = repeatPlaylist.Checked;
+                pl_main.settings.setMode("loop", pl_repeat);
+                connection.Close();
+
+
+            }
+        }
+
+        private void pauseMusicBreak_CheckedChanged(object sender, EventArgs e)
+        {
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
+            {
+                connection.Open();
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                command.CommandText = "UPDATE user_pref SET pl_break = ";
+                command.CommandText += Convert.ToInt32(pauseMusicBreak.Checked) + " WHERE id=0";
+                command.ExecuteNonQuery();
+                pl_break = pauseMusicBreak.Checked;
+
+                connection.Close();
+
+
+            }
+        }
+        public void pl_sc()
+        {
+            pl_main.controls.pause();
         }
     }
 }
