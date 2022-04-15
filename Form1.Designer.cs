@@ -221,7 +221,6 @@
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(4, 83);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
@@ -243,7 +242,6 @@
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(4, 57);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
@@ -253,7 +251,6 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(4, 30);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
@@ -287,7 +284,6 @@
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(4, 30);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
@@ -309,7 +305,6 @@
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(4, 57);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
@@ -367,7 +362,6 @@
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(4, 60);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
@@ -389,7 +383,6 @@
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(4, 89);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
@@ -399,7 +392,6 @@
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(4, 30);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
@@ -477,7 +469,6 @@
             // 
             // lbLogic
             // 
-            this.lbLogic.AutoSize = true;
             this.lbLogic.Location = new System.Drawing.Point(23, 42);
             this.lbLogic.Name = "lbLogic";
             this.lbLogic.Size = new System.Drawing.Size(318, 17);
@@ -488,7 +479,6 @@
             // 
             // offsetTimer
             // 
-            this.offsetTimer.AutoSize = true;
             this.offsetTimer.Checked = true;
             this.offsetTimer.CheckState = System.Windows.Forms.CheckState.Checked;
             this.offsetTimer.Location = new System.Drawing.Point(23, 19);
@@ -529,7 +519,6 @@
             // 
             // pauseMusicBreak
             // 
-            this.pauseMusicBreak.AutoSize = true;
             this.pauseMusicBreak.Checked = true;
             this.pauseMusicBreak.CheckState = System.Windows.Forms.CheckState.Checked;
             this.pauseMusicBreak.Location = new System.Drawing.Point(7, 48);
@@ -542,7 +531,6 @@
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(4, 74);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
@@ -552,7 +540,6 @@
             // 
             // repeatPlaylist
             // 
-            this.repeatPlaylist.AutoSize = true;
             this.repeatPlaylist.Checked = true;
             this.repeatPlaylist.CheckState = System.Windows.Forms.CheckState.Checked;
             this.repeatPlaylist.Location = new System.Drawing.Point(7, 25);
@@ -571,10 +558,10 @@
             this.playlistFolder.Size = new System.Drawing.Size(236, 20);
             this.playlistFolder.TabIndex = 0;
             this.playlistFolder.Text = "playlist";
+            this.playlistFolder.TextChanged += new System.EventHandler(this.playlistFolder_TextChanged);
             // 
             // playerEnabled
             // 
-            this.playerEnabled.AutoSize = true;
             this.playerEnabled.Location = new System.Drawing.Point(23, 19);
             this.playerEnabled.Name = "playerEnabled";
             this.playerEnabled.Size = new System.Drawing.Size(299, 17);
@@ -785,9 +772,7 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
             this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
             this.playerSettingsGroup.ResumeLayout(false);
             this.playerSettingsGroup.PerformLayout();
             this.tabPage2.ResumeLayout(false);

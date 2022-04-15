@@ -101,31 +101,7 @@ namespace pomidor
                 this.comboBox3.Items.Add(temp);
                 this.comboBox4.Items.Add(temp);
             }
-            if (!System.IO.Directory.Exists(pl_folder))
-            {
-                using (var connection = new SqliteConnection("Data Source=userdata.db"))
-                {
-                    connection.Open();
-                    SqliteCommand command = new SqliteCommand();
-                    command.Connection = connection;
-
-                    MessageBox.Show("Указанная папка не существует, установлена папка по умолчанию - playlist.");
-                    pl_folder = "playlist";
-                    command.CommandText = "UPDATE user_pref SET pl_folder = \"playlist\" WHERE id=0";
-                    command.ExecuteNonQuery();
-                    connection.Close();
-
-
-                }
-            }
-            pl_main.currentPlaylist = pl_main.newPlaylist("main", "");
-            f = Directory.GetFiles(pl_folder+"\\", "*.mp3");
-            foreach (string f1 in f)
-            {
-                pl_main.currentPlaylist.appendItem(pl_main.newMedia(f1));
-            }
-            pl_main.settings.setMode("shuffle", true);
-            pl_main.settings.setMode("loop", pl_repeat);
+           
 
 
 
@@ -145,7 +121,23 @@ namespace pomidor
                     var SQL = "CREATE TABLE \"timers\" (\"date\"  INTEGER NOT NULL,\"type\"  INTEGER NOT NULL,\"id\"    INTEGER NOT NULL UNIQUE,\"length\"    INTEGER NOT NULL,\"start\" INTEGER NOT NULL,\"end\"   INTEGER NOT NULL,PRIMARY KEY(\"id\" AUTOINCREMENT))";
                     command.CommandText = SQL;
                     _ = command.ExecuteNonQuery();
-                    SQL = "CREATE TABLE \"user_pref\" (\"id\"    INTEGER NOT NULL,\"focus_time\"    INTEGER NOT NULL DEFAULT 25,\"break_time\"    INTEGER NOT NULL DEFAULT 5,\"lbreak_time\"   INTEGER NOT NULL DEFAULT 15,\"before_lbreak\" INTEGER NOT NULL DEFAULT 4,\"f1_sound\"  TEXT DEFAULT \'нет\',\"f2_sound\"  TEXT DEFAULT \'нет\',\"b_sound\"   TEXT DEFAULT \'нет\',\"lb_sound\"  TEXT DEFAULT \'нет\', \"nort_timer\"  INTEGER DEFAULT 1, \"nort_lb_logic\"  INTEGER DEFAULT 0)";
+                    SQL = "CREATE TABLE \"user_pref\" (" +
+                        "\"id\"    INTEGER NOT NULL," +
+                        "\"focus_time\"    INTEGER NOT NULL DEFAULT 25," +
+                        "\"break_time\"    INTEGER NOT NULL DEFAULT 5," +
+                        "\"lbreak_time\"   INTEGER NOT NULL DEFAULT 15," +
+                        "\"before_lbreak\" INTEGER NOT NULL DEFAULT 4," +
+                        "\"f1_sound\"  TEXT DEFAULT \'нет\'," +
+                        "\"f2_sound\"  TEXT DEFAULT \'нет\'," +
+                        "\"b_sound\"   TEXT DEFAULT \'нет\'," +
+                        "\"lb_sound\"  TEXT DEFAULT \'нет\', " +
+                        "\"nort_timer\"  INTEGER DEFAULT 1, " +
+                        "\"nort_lb_logic\"  INTEGER DEFAULT 0," +
+                        "\"pl_status\"  INTEGER DEFAULT 0," +
+                        "\"pl_repeat\"  INTEGER DEFAULT 1," +
+                        "\"pl_break\"  INTEGER DEFAULT 1," +
+                        "\"pl_folder\"  TEXT DEFAULT 'playlist'" +
+                        ")";
                     command.CommandText = SQL;
                     _ = command.ExecuteNonQuery();
                     SQL = "INSERT INTO user_pref(id) VALUES(0)";
@@ -193,7 +185,32 @@ namespace pomidor
                 }
                 connection.Close();
             }
+            if (!System.IO.Directory.Exists(pl_folder))
+            {
+                MessageBox.Show("Указанная папка не существует, установлена папка по умолчанию - playlist.");
                 using (var connection = new SqliteConnection("Data Source=userdata.db"))
+                {
+                    connection.Open();
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+
+                    pl_folder = "playlist";
+                    command.CommandText = "UPDATE user_pref SET pl_folder = \"playlist\" WHERE id=0";
+                    command.ExecuteNonQuery();
+                    connection.Close();
+
+
+                }
+            }
+            pl_main.currentPlaylist = pl_main.newPlaylist("main", "");
+            f = Directory.GetFiles(pl_folder + "\\", "*.mp3");
+            foreach (string f1 in f)
+            {
+                pl_main.currentPlaylist.appendItem(pl_main.newMedia(f1));
+            }
+            pl_main.settings.setMode("shuffle", true);
+            pl_main.settings.setMode("loop", pl_repeat);
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
                 connection.Open();
                 SqliteCommand command = new SqliteCommand
@@ -1192,7 +1209,7 @@ namespace pomidor
                 offset = int.Parse(args[2]) + tableLayoutPanel1.Location.X + panel3.Width - this.Width + 16;
             }
 
-            panel3.Location = new System.Drawing.Point(int.Parse(args[2]) + tableLayoutPanel1.Location.X-offset, int.Parse(args[3]) + tableLayoutPanel1.Location.Y-40);
+            panel3.Location = new System.Drawing.Point(int.Parse(args[2]) + tableLayoutPanel1.Location.X-offset, tableLayoutPanel1.Location.Y + int.Parse(args[3])- panel3.Height-11);
             if (args[0][args[0].Length-1] == '1')
             {
                 if (args[0].Length == 1)
@@ -1459,6 +1476,31 @@ namespace pomidor
         public void pl_sc()
         {
             pl_main.controls.pause();
+        }
+
+        private void playlistFolder_TextChanged(object sender, EventArgs e)
+        {
+            string txt = this.textBox1.Text;
+            if (txt == "")
+            {
+                txt = "playlist";
+                this.playlistFolder.Text = txt;
+            }
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
+            {
+                connection.Open();
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                command.CommandText = "UPDATE user_pref SET pl_folder = ";
+                command.CommandText += txt + " WHERE id=0";
+                command.ExecuteNonQuery();
+                pl_folder = txt;
+
+                connection.Close();
+
+
+            }
         }
     }
 }
