@@ -203,7 +203,9 @@ namespace pomidor
                 }
             }
             pl_main.currentPlaylist = pl_main.newPlaylist("main", "");
-            f = Directory.GetFiles(pl_folder + "\\", "*.mp3");
+            var rng = new Random();
+            f = Directory.GetFiles(pl_folder + "\\", "*.mp3").OrderBy(x => rng.Next()).ToArray();
+            
             foreach (string f1 in f)
             {
                 pl_main.currentPlaylist.appendItem(pl_main.newMedia(f1));
@@ -1401,9 +1403,10 @@ namespace pomidor
                 playerSettingsGroup.Enabled = pl_status;
             if (playerEnabled.Checked)
             {
+                pl_main.controls.next();
                 if (this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 2].Text != "Следующий трек")
                 {
-                    pl_main.controls.next();
+                   
                     this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Приостановить плеер", null, pl_pause));
                     this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Следующий трек", null, pl_nextTrack));
                 }
