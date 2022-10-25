@@ -494,6 +494,7 @@ namespace pomidor
             this.Focus();
             this.Visible = true;
             this.WindowState = FormWindowState.Normal;
+            pl_main.settings.setMode("shuffle", true);
         }
 
         private void TimersHide()
