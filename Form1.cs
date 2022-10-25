@@ -494,7 +494,7 @@ namespace pomidor
             this.Focus();
             this.Visible = true;
             this.WindowState = FormWindowState.Normal;
-            pl_main.settings.setMode("shuffle", true);
+            
         }
 
         private void TimersHide()
@@ -1394,6 +1394,7 @@ namespace pomidor
                     pl_status = playerEnabled.Checked;
 
                     connection.Close();
+                    
 
 
                 }
@@ -1402,12 +1403,14 @@ namespace pomidor
             {
                 if (this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 2].Text != "Следующий трек")
                 {
+                    pl_main.controls.next();
                     this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Приостановить плеер", null, pl_pause));
                     this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Следующий трек", null, pl_nextTrack));
                 }
             }
             else
             {
+                pl_main.controls.previous();
                 this.notifyIcon1.ContextMenuStrip.Items.Remove(this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 1]);
                 this.notifyIcon1.ContextMenuStrip.Items.Remove(this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 1]);
             }
