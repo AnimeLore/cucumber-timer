@@ -30,7 +30,7 @@ namespace pomidor
         bool pl_status = false;
         bool pl_repeat = true;
         bool pl_break = true;
-        bool pl_paused =false;
+        bool pl_paused = false;
         private bool _timer_work = false;
         private bool _timer_pause = false;
         private short _timer_type = 0;
@@ -63,7 +63,7 @@ namespace pomidor
                     pB.BackColor = System.Drawing.Color.Transparent;
                     pB.Paint += pictureBox1_Paint_1;
                     pB.Margin = new Padding(0);
-                    tableLayoutPanel1.Controls.Add(pB,i,j);
+                    tableLayoutPanel1.Controls.Add(pB, i, j);
                 }
             }
             tableLayoutPanel1.ResumeLayout();
@@ -93,7 +93,7 @@ namespace pomidor
             di = new DirectoryInfo("sounds\\");
             di.Create();
             var f = Directory.GetFiles("sounds\\", "*.mp3");
-            foreach(string f2 in f)
+            foreach (string f2 in f)
             {
                 var temp = f2.Split('\\')[1].Split('.')[0];
                 this.comboBox1.Items.Add(temp);
@@ -101,7 +101,7 @@ namespace pomidor
                 this.comboBox3.Items.Add(temp);
                 this.comboBox4.Items.Add(temp);
             }
-           
+
 
 
 
@@ -205,7 +205,7 @@ namespace pomidor
             pl_main.currentPlaylist = pl_main.newPlaylist("main", "");
             var rng = new Random();
             f = Directory.GetFiles(pl_folder + "\\", "*.mp3").OrderBy(x => rng.Next()).ToArray();
-            
+
             foreach (string f1 in f)
             {
                 pl_main.currentPlaylist.appendItem(pl_main.newMedia(f1));
@@ -264,8 +264,10 @@ namespace pomidor
                 try
                 {
                     command.ExecuteNonQuery();
-                } catch { 
-                
+                }
+                catch
+                {
+
                 }
                 #endregion
                 #region --# nort_lb_logic #--
@@ -280,7 +282,7 @@ namespace pomidor
                 }
                 #endregion
                 #region --# pl_status #--
-                command = new SqliteCommand(" ALTER TABLE user_pref ADD pl_status INTEGER NOT NULL DEFAULT 0", connection); 
+                command = new SqliteCommand(" ALTER TABLE user_pref ADD pl_status INTEGER NOT NULL DEFAULT 0", connection);
                 try
                 {
                     command.ExecuteNonQuery();
@@ -338,39 +340,39 @@ namespace pomidor
                 using (var connection = new SqliteConnection("Data Source=userdata.db"))
                 {
                     string SQL = "ATTACH '" + theDialog.FileName + "' AS TOMERGE";
-                SqliteCommand cmd = new SqliteCommand(SQL);
-                cmd.Connection = connection;
-                connection.Open();
-                int retval = 0;
-                try
-                {
-                    retval = cmd.ExecuteNonQuery();
-                }
-                catch (Exception Er)
-                {
-                    MessageBox.Show("An error occurred, your import was not completed.\n"+Er.Message);
-                }
-                finally
-                {
-                    cmd.Dispose();
-                }
-
-                SQL = "INSERT INTO timers(date,type,length,start,end) SELECT date,type,length,start,end FROM TOMERGE.timers";
-                cmd = new SqliteCommand(SQL);
-                cmd.Connection = connection;
-                retval = 0;
+                    SqliteCommand cmd = new SqliteCommand(SQL);
+                    cmd.Connection = connection;
+                    connection.Open();
+                    int retval = 0;
                     try
                     {
                         retval = cmd.ExecuteNonQuery();
                     }
                     catch (Exception Er)
                     {
-                        MessageBox.Show("An error occurred, your import was not completed.\n"+Er.Message);
+                        MessageBox.Show("An error occurred, your import was not completed.\n" + Er.Message);
                     }
                     finally
                     {
                         cmd.Dispose();
-                        
+                    }
+
+                    SQL = "INSERT INTO timers(date,type,length,start,end) SELECT date,type,length,start,end FROM TOMERGE.timers";
+                    cmd = new SqliteCommand(SQL);
+                    cmd.Connection = connection;
+                    retval = 0;
+                    try
+                    {
+                        retval = cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception Er)
+                    {
+                        MessageBox.Show("An error occurred, your import was not completed.\n" + Er.Message);
+                    }
+                    finally
+                    {
+                        cmd.Dispose();
+
                     }
                     SQL = "DETACH TOMERGE";
                     cmd.Connection = connection;
@@ -468,10 +470,11 @@ namespace pomidor
             }
             comboBox5.Items.Clear();
             comboBox5.Items.AddRange(installs);
-            if (long_break_n<0)
+            if (long_break_n < 0)
             {
                 this.comboBox5.SelectedIndex = 0;
-            } else
+            }
+            else
             {
                 this.comboBox5.SelectedIndex = long_break_n;
             }
@@ -496,7 +499,7 @@ namespace pomidor
             this.Focus();
             this.Visible = true;
             this.WindowState = FormWindowState.Normal;
-            
+
         }
 
         private void TimersHide()
@@ -579,7 +582,8 @@ namespace pomidor
             if (System.IO.File.Exists("images/focus.ico"))
             {
                 this.notifyIcon1.Icon = new Icon("images/focus.ico");
-            } else
+            }
+            else
             {
                 this.notifyIcon1.Icon = pomidor.Properties.Resources.focus;
             }
@@ -639,12 +643,13 @@ namespace pomidor
             }
             else
             {
-                stopTime += (DateTimeOffset.Now.ToUnixTimeSeconds()-pauseMoment);
+                stopTime += (DateTimeOffset.Now.ToUnixTimeSeconds() - pauseMoment);
                 timerx.Start();
                 timerx.Enabled = true;
                 _timer_pause = false;
                 this.notifyIcon1.ContextMenuStrip.Items[0].Text = "Приостановить таймер";
-                switch (_timer_type) {
+                switch (_timer_type)
+                {
                     case 1:
                         if (System.IO.File.Exists("images/focus.ico"))
                         {
@@ -680,7 +685,7 @@ namespace pomidor
                         }
                         break;
                 }
-                
+
             }
         }
         public void StopClick(object sender, EventArgs e)
@@ -719,7 +724,8 @@ namespace pomidor
                 if (_timer_work)
                 {
                     PauseClick(sender, e);
-                } else
+                }
+                else
                 {
                     startTime = DateTimeOffset.Now.ToUnixTimeSeconds();
                     switch (_timer_type)
@@ -786,8 +792,8 @@ namespace pomidor
             if (stopTime - DateTimeOffset.Now.ToUnixTimeSeconds() <= 0 && _timer_work)
             {
                 _timer_work = false;
-                timerx.Enabled=false;
-                _timer_pause =false;
+                timerx.Enabled = false;
+                _timer_pause = false;
                 timerx.Stop();
                 timerx.Tick -= Timer_Tick;
                 TimersHide();
@@ -816,7 +822,7 @@ namespace pomidor
                             int current_t = 0;
                             current_n = Convert.ToInt32(command.ExecuteScalar());
                             command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE (date-(date%86400))/86400 = " + Convert.ToString(DateTimeOffset.Now.ToUnixTimeSeconds() / 86400) + " AND type = 3", connection);
-                            
+
                             current_lb = Convert.ToInt32(command.ExecuteScalar());
                             command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE (date-(date%86400))/86400 = " + Convert.ToString(DateTimeOffset.Now.ToUnixTimeSeconds() / 86400) + " AND type = 1", connection);
                             current_t = Convert.ToInt32(command.ExecuteScalar());
@@ -825,17 +831,18 @@ namespace pomidor
                                 wplayer.URL = "sounds/" + f2_sound + ".mp3";
                                 wplayer.controls.play();
                             }
-                            if ((current_t%long_break_n == 0 && !lb_logic) || ((current_n + current_lb) % long_break_n == long_break_n - 1 && lb_logic))
+                            if ((current_t % long_break_n == 0 && !lb_logic) || ((current_n + current_lb) % long_break_n == long_break_n - 1 && lb_logic))
                             {
                                 _timer_type = 3;
                                 Nortification("", 3);
-                                
-                            } else
+
+                            }
+                            else
                             {
                                 _timer_type = 2;
                                 Nortification("", 2);
                             }
-                            StopClick(sender,e);
+                            StopClick(sender, e);
                             connection.Close();
 
                         }
@@ -866,8 +873,8 @@ namespace pomidor
 
                             }
                         }
-                            _timer_type = 1;
-                        
+                        _timer_type = 1;
+
                         if (f1_sound != "нет")
                         {
                             wplayer.URL = "sounds/" + f1_sound + ".mp3";
@@ -879,7 +886,8 @@ namespace pomidor
                         break;
                 }
                 Task.Run(Calc_heatmap);
-            } else if (_timer_work)
+            }
+            else if (_timer_work)
             {
                 var date = DateTimeOffset.FromUnixTimeSeconds(stopTime - DateTimeOffset.Now.ToUnixTimeSeconds());
                 switch (_timer_type)
@@ -897,7 +905,8 @@ namespace pomidor
                 if (_timer_pause)
                 {
                     notifyIcon1.Text += "\nСтатус: Пауза";
-                } else
+                }
+                else
                 {
                     notifyIcon1.Text += "\nСтатус: Активен";
                 }
@@ -921,11 +930,11 @@ namespace pomidor
                 command.Connection = connection;
 
                 command.CommandText = "UPDATE user_pref SET before_lbreak = ";
-                if(selectedState == 0)
+                if (selectedState == 0)
                 {
                     selectedState = -1;
                 }
-                command.CommandText += Convert.ToString(selectedState)+ " WHERE id=0";
+                command.CommandText += Convert.ToString(selectedState) + " WHERE id=0";
                 command.ExecuteNonQuery();
                 long_break_n = selectedState;
 
@@ -963,7 +972,7 @@ namespace pomidor
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             string txt = this.textBox2.Text;
-            if(txt == "")
+            if (txt == "")
             {
                 txt = "1";
                 this.textBox2.Text = txt;
@@ -988,7 +997,7 @@ namespace pomidor
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             string txt = this.textBox3.Text;
-            if( txt == "")
+            if (txt == "")
             {
                 txt = "1";
                 this.textBox3.Text = txt;
@@ -1119,14 +1128,14 @@ namespace pomidor
             using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
                 connection.Open();
-                SqliteCommand command;
-                command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE (date-(date%31556926))/31556926 = " + Convert.ToString(new DateTimeOffset(year, 1, 1, 0, 0, 0, 0, DateTimeOffset.Now.Offset).ToUnixTimeSeconds() / 31556926) + " AND type = 1", connection);
+                SqliteCommand command, command1;
+                command = new SqliteCommand("SELECT COUNT(*) FROM timers WHERE strftime('%Y', datetime(date, 'unixepoch')) = \"" + Convert.ToString(year) + "\" AND type = 1", connection);
                 int current_n = 0;
                 current_n = Convert.ToInt32(command.ExecuteScalar());
-                command = new SqliteCommand("SELECT * FROM timers WHERE (date-(date%31556926))/31556926 = " + Convert.ToString(new DateTimeOffset(year, 1, 1, 0, 0, 0, 0, DateTimeOffset.Now.Offset).ToUnixTimeSeconds() / 31556926) + " AND type = 1", connection);
+                command = new SqliteCommand("SELECT * FROM timers WHERE strftime('%Y', datetime(date, 'unixepoch')) = \"" + Convert.ToString(year) + "\" AND type = 1", connection);
                 int[] days = new int[366];
                 bool visokos = true;
-                int skip_days = (new DateTime(year, 1, 1).DayOfWeek == 0) ? 6 : (int)new DateTime(year, 1, 1).DayOfWeek-1;
+                int skip_days = (new DateTime(year, 1, 1).DayOfWeek == 0) ? 6 : (int)new DateTime(year, 1, 1).DayOfWeek - 1;
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows) // если есть данные
@@ -1143,7 +1152,7 @@ namespace pomidor
                 tableLayoutPanel1.SuspendLayout();
                 foreach (Control cell in tableLayoutPanel1.Controls)
                 {
-                    if(skip_days>0)
+                    if (skip_days > 0)
                     {
                         skip_days--;
                         continue;
@@ -1207,21 +1216,23 @@ namespace pomidor
             var args = pB.Name.Split('n');
             var temp_text = args[0];
             var offset = 0;
-            if (int.Parse(args[2]) +tableLayoutPanel1.Location.X+panel3.Width-this.Width > 16)
+            if (int.Parse(args[2]) + tableLayoutPanel1.Location.X + panel3.Width - this.Width > 16)
             {
                 offset = int.Parse(args[2]) + tableLayoutPanel1.Location.X + panel3.Width - this.Width + 16;
             }
 
-            panel3.Location = new System.Drawing.Point(int.Parse(args[2]) + tableLayoutPanel1.Location.X-offset, tableLayoutPanel1.Location.Y + int.Parse(args[3])- panel3.Height-11);
-            if (args[0][args[0].Length-1] == '1')
+            panel3.Location = new System.Drawing.Point(int.Parse(args[2]) + tableLayoutPanel1.Location.X - offset, tableLayoutPanel1.Location.Y + int.Parse(args[3]) - panel3.Height - 11);
+            if (args[0][args[0].Length - 1] == '1')
             {
                 if (args[0].Length == 1)
                 {
                     temp_text += " кукумбер, ";
-                } else if (args[0][args[0].Length - 2] != '1')
+                }
+                else if (args[0][args[0].Length - 2] != '1')
                 {
                     temp_text += " кукумбер, ";
-                } else
+                }
+                else
                 {
                     temp_text += " кукумберов, ";
                 }
@@ -1276,8 +1287,8 @@ namespace pomidor
                 temp_text += " кукумберов, ";
             }
             var culture = CultureInfo.CreateSpecificCulture("ru-RU");
-            DateTime date = new DateTime(year,1,1).AddDays(Convert.ToInt32(args[1]));
-            temp_text+= date.ToString("dddd, d MMMM", culture);
+            DateTime date = new DateTime(year, 1, 1).AddDays(Convert.ToInt32(args[1]));
+            temp_text += date.ToString("dddd, d MMMM", culture);
             label13.Text = temp_text;
             panel3.Visible = true;
             tableLayoutPanel1.ResumeLayout();
@@ -1372,20 +1383,20 @@ namespace pomidor
 
 
             }
-            OpenSettings(sender,e);
+            OpenSettings(sender, e);
         }
 
         private void playerEnabled_CheckedChanged(object sender, EventArgs e)
         {
-                using (var connection = new SqliteConnection("Data Source=userdata.db"))
-                {
-                    connection.Open();
-                    SqliteCommand command = new SqliteCommand();
-                    command.Connection = connection;
+            using (var connection = new SqliteConnection("Data Source=userdata.db"))
+            {
+                connection.Open();
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
 
-                    command.CommandText = "UPDATE user_pref SET pl_status = ";
-                    command.CommandText += Convert.ToInt32(playerEnabled.Checked) + " WHERE id=0";
-                    command.ExecuteNonQuery();
+                command.CommandText = "UPDATE user_pref SET pl_status = ";
+                command.CommandText += Convert.ToInt32(playerEnabled.Checked) + " WHERE id=0";
+                command.ExecuteNonQuery();
                 if (!System.IO.Directory.Exists(pl_folder))
                 {
                     MessageBox.Show("Указанная папка не существует, установлена папка по умолчанию - playlist.");
@@ -1393,20 +1404,20 @@ namespace pomidor
                     command.CommandText = "UPDATE user_pref SET pl_folder = \"playlist\" WHERE id=0";
                     command.ExecuteNonQuery();
                 }
-                    pl_status = playerEnabled.Checked;
+                pl_status = playerEnabled.Checked;
 
-                    connection.Close();
-                    
+                connection.Close();
 
 
-                }
-                playerSettingsGroup.Enabled = pl_status;
+
+            }
+            playerSettingsGroup.Enabled = pl_status;
             if (playerEnabled.Checked)
             {
                 pl_main.controls.next();
                 if (this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 2].Text != "Следующий трек")
                 {
-                   
+
                     this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Приостановить плеер", null, pl_pause));
                     this.notifyIcon1.ContextMenuStrip.Items.Insert(this.notifyIcon1.ContextMenuStrip.Items.Count - 1, new ToolStripMenuItem("Следующий трек", null, pl_nextTrack));
                 }
@@ -1426,7 +1437,7 @@ namespace pomidor
             this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Text = "Возобновить плеер";
             this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Click -= pl_pause;
             this.notifyIcon1.ContextMenuStrip.Items[this.notifyIcon1.ContextMenuStrip.Items.Count - 3].Click += pl_unpause;
-            
+
         }
 
         private void pl_unpause(object sender, EventArgs e)
