@@ -1142,7 +1142,7 @@ namespace pomidor
                     {
                         while (reader.Read())
                         {
-                            int date = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(reader.GetValue(0))).UtcDateTime.DayOfYear;
+                            int date = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(reader.GetValue(0))).ToLocalTime().UtcDateTime.DayOfYear;
                             days[date - 1]++;
                         }
                     }
@@ -1150,10 +1150,17 @@ namespace pomidor
                 int maxValue = days.Max();
                 int current_day = 0;
                 tableLayoutPanel1.SuspendLayout();
+                foreach(Control cell in tableLayoutPanel1.Controls)
+                {
+                    cell.BackColor = SystemColors.Control;
+                }
+                tableLayoutPanel1.ResumeLayout();
+                tableLayoutPanel1.SuspendLayout();
                 foreach (Control cell in tableLayoutPanel1.Controls)
                 {
                     if (skip_days > 0)
                     {
+                        cell.BackColor = SystemColors.Control;
                         skip_days--;
                         continue;
                     }
@@ -1187,7 +1194,7 @@ namespace pomidor
                     current_day++;
                     if ((visokos && current_day >= 365) || (!visokos && current_day >= 366))
                     {
-                        break;
+                        cell.BackColor = SystemColors.Control;
                     }
 
 
