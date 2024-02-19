@@ -1125,6 +1125,7 @@ namespace pomidor
 
         private void Calc_heatmap()
         {
+            int[] weeks = new int[53];
             using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
                 connection.Open();
@@ -1149,8 +1150,9 @@ namespace pomidor
                 }
                 int maxValue = days.Max();
                 int current_day = 0;
+                int current_week = 0;
                 tableLayoutPanel1.SuspendLayout();
-                foreach(Control cell in tableLayoutPanel1.Controls)
+                foreach (Control cell in tableLayoutPanel1.Controls)
                 {
                     cell.BackColor = SystemColors.Control;
                 }
@@ -1164,6 +1166,7 @@ namespace pomidor
                         skip_days--;
                         continue;
                     }
+                    try {
                     if (days[current_day] == 0)
                     {
                         cell.BackColor = System.Drawing.Color.White;
@@ -1189,20 +1192,45 @@ namespace pomidor
                         }
 
                     }
-                    cell.Name = days[current_day].ToString() + "n" + current_day.ToString() + "n" + cell.Location.X.ToString() + "n" + cell.Location.Y.ToString();
+                
+                cell.Name = days[current_day].ToString() + "n" + current_day.ToString() + "n" + cell.Location.X.ToString() + "n" + cell.Location.Y.ToString();
                     cell.MouseEnter += tt_Enter;
+                    weeks[current_week] += days[current_day];
                     current_day++;
+                    if (current_day % 7 == 0)
+                    {
+                        current_week++;
+                        weeks[current_week] = 0;
+                    }
                     if ((visokos && current_day >= 365) || (!visokos && current_day >= 366))
                     {
                         cell.BackColor = SystemColors.Control;
                     }
 
-
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
+
+                this.chart1.SuspendLayout();
+                this.chart1.Series[0].Points.Clear();
+                int j = 0;
+                Console.WriteLine(weeks.Length);
+                foreach (int i in weeks)
+                {
+                    Console.WriteLine(i);
+                    this.chart1.Series[0].Points.AddXY(j, i);
+                    j++;
+                }
+                this.chart1.ResumeLayout();
                 tableLayoutPanel1.ResumeLayout();
+
 
                 connection.Close();
             }
+            
         }
         private void tt_Leave(object sender, EventArgs e)
         {
