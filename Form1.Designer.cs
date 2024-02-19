@@ -733,19 +733,30 @@
             // 
             // chart1
             // 
+            chartArea1.AxisX.Interval = 13.25D;
+            chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea1.AxisX.Maximum = 53D;
+            chartArea1.AxisX.MaximumAutoSize = 100F;
+            chartArea1.AxisX.Minimum = 0D;
+            chartArea1.AxisX.ScaleBreakStyle.MaxNumberOfBreaks = 4;
+            chartArea1.AxisX.ScaleBreakStyle.StartFromZero = System.Windows.Forms.DataVisualization.Charting.StartFromZero.Yes;
             chartArea1.AxisX.ScrollBar.Enabled = false;
             chartArea1.AxisX2.ScrollBar.Enabled = false;
+            chartArea1.AxisY.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea1.AxisY.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
             chartArea1.AxisY.ScrollBar.Enabled = false;
             chartArea1.AxisY2.ScrollBar.Enabled = false;
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.Location = new System.Drawing.Point(39, 201);
+            this.chart1.Location = new System.Drawing.Point(39, 193);
             this.chart1.Name = "chart1";
-            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
+            series1.BorderWidth = 2;
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.IsXValueIndexed = true;
+            series1.LabelToolTip = "#VAL";
             series1.Name = "Дни";
+            series1.ToolTip = "#VAL";
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(530, 126);
             this.chart1.TabIndex = 8;

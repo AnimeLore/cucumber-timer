@@ -1215,16 +1215,19 @@ namespace pomidor
                 }
 
                 this.chart1.SuspendLayout();
-                this.chart1.Series[0].Points.Clear();
-                int j = 0;
-                Console.WriteLine(weeks.Length);
-                foreach (int i in weeks)
+                this.chart1.BeginInvoke((MethodInvoker)(() =>
                 {
-                    Console.WriteLine(i);
-                    this.chart1.Series[0].Points.AddXY(j, i);
-                    j++;
-                }
+                    this.chart1.Series[0].Points.Clear();
+                    int j = 0;
+                    foreach (int i in weeks)
+                    {
+                        var point = this.chart1.Series[0].Points.AddXY(j, i);
+                        this.chart1.Series[0].Points[point].ToolTip = "#SERIESNAME : X=#VALX, Y=#VALY";
+                        j++;
+                    }
+                }));
                 this.chart1.ResumeLayout();
+
                 tableLayoutPanel1.ResumeLayout();
 
 
