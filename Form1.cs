@@ -1125,6 +1125,7 @@ namespace pomidor
 
         private void Calc_heatmap()
         {
+            Task.Run(ghostRecalculate);
             int[] weeks = new int[53];
             using (var connection = new SqliteConnection("Data Source=userdata.db"))
             {
@@ -1143,7 +1144,12 @@ namespace pomidor
                     {
                         while (reader.Read())
                         {
-                            int date = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(reader.GetValue(0))).ToLocalTime().UtcDateTime.DayOfYear;
+                            var result = reader.GetValue(0);
+                            Console.WriteLine(result);
+                            Console.WriteLine(DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result)).ToLocalTime().ToUnixTimeSeconds());
+                            Console.WriteLine(DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result)).ToLocalTime().ToString());
+                            Console.WriteLine("====");
+                            int date = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result)).ToLocalTime().DayOfYear;
                             days[date - 1]++;
                         }
                     }
@@ -1233,7 +1239,7 @@ namespace pomidor
 
                 connection.Close();
             }
-            
+
         }
         private void tt_Leave(object sender, EventArgs e)
         {
@@ -1557,6 +1563,74 @@ namespace pomidor
 
 
             }
+        }
+
+        private void ghostRecalculate()
+        {
+            if (dateGhost.Value == DateTime.ParseExact("01.01.1753", "dd.MM.yyyy", CultureInfo.InvariantCulture))
+            {
+                dateGhost.BeginInvoke((MethodInvoker)(() =>
+                dateGhost.Value = DateTime.Today.AddDays(-1)
+                ));
+            }
+            previousGhost.BeginInvoke((MethodInvoker)(() =>
+                previousGhost.Text = "0"
+                ));
+            currentGhost.BeginInvoke((MethodInvoker)(() =>
+                currentGhost.Text = "0"
+                ));
+            dateGhost.BeginInvoke((MethodInvoker)(() =>
+            {
+                DateTimeOffset currentTime = DateTimeOffset.Now.Date;
+                DateTimeOffset currentDTime = DateTimeOffset.Now;
+                int remainingHours = currentDTime.Hour;
+                int remainingMinutes = currentDTime.Minute;
+                int remainingSeconds = currentDTime.Second;
+                string format = "dd.MM.yyyy";
+                DateTimeOffset parsedDate = new DateTimeOffset(dateGhost.Value);
+                Console.WriteLine(parsedDate.ToUnixTimeSeconds());
+                DateTimeOffset updatedDate = parsedDate.AddHours(remainingHours).AddSeconds(remainingSeconds).AddMinutes(remainingMinutes);
+                Console.WriteLine(updatedDate.ToUnixTimeSeconds());
+                string queryString = "SELECT COUNT(*) FROM timers WHERE type = \"1\" AND date BETWEEN @StartDate AND @EndDate" ;
+
+
+                try
+                {
+                    using (var connection = new SqliteConnection("Data Source=userdata.db;Mode=ReadWriteCreate"))
+                    {
+                        connection.Open();
+                        SqliteCommand command = new SqliteCommand(queryString, connection);
+                        command.Parameters.AddWithValue("@StartDate", parsedDate.ToUnixTimeSeconds());
+                        command.Parameters.AddWithValue("@EndDate", updatedDate.ToUnixTimeSeconds());
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        previousGhost.BeginInvoke((MethodInvoker)(() =>
+                        previousGhost.Text = Convert.ToString(count)
+                        ));
+                        connection.Close();
+                    }
+                    using (var connection = new SqliteConnection("Data Source=userdata.db;Mode=ReadWriteCreate"))
+                    {
+                        connection.Open();
+                        SqliteCommand command = new SqliteCommand(queryString, connection);
+                        command.Parameters.AddWithValue("@StartDate", currentTime.ToUnixTimeSeconds());
+                        command.Parameters.AddWithValue("@EndDate", currentDTime.ToUnixTimeSeconds());
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        currentGhost.BeginInvoke((MethodInvoker)(() =>
+                        currentGhost.Text = Convert.ToString(count)
+                        ));
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка при выполнении запроса: {ex.Message}");
+                }
+            }));
+        }
+
+        private void dateGhost_ValueChanged(object sender, EventArgs e)
+        {
+            Task.Run(ghostRecalculate);
         }
     }
 }

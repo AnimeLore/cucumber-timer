@@ -72,6 +72,12 @@
             this.playlistFolder = new System.Windows.Forms.TextBox();
             this.playerEnabled = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.dateGhost = new System.Windows.Forms.DateTimePicker();
+            this.label16 = new System.Windows.Forms.Label();
+            this.previousGhost = new System.Windows.Forms.Label();
+            this.currentGhost = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -113,7 +119,7 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.button3);
-            this.panel1.Location = new System.Drawing.Point(-1, -4);
+            this.panel1.Location = new System.Drawing.Point(-1, -3);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(592, 85);
@@ -421,7 +427,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(627, 427);
+            this.tabControl1.Size = new System.Drawing.Size(627, 497);
             this.tabControl1.TabIndex = 9;
             // 
             // tabPage1
@@ -432,7 +438,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(619, 401);
+            this.tabPage1.Size = new System.Drawing.Size(619, 471);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             // 
@@ -577,6 +583,12 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.dateGhost);
+            this.tabPage2.Controls.Add(this.label16);
+            this.tabPage2.Controls.Add(this.previousGhost);
+            this.tabPage2.Controls.Add(this.currentGhost);
+            this.tabPage2.Controls.Add(this.label15);
+            this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.panel3);
             this.tabPage2.Controls.Add(this.tableLayoutPanel1);
             this.tabPage2.Controls.Add(this.label11);
@@ -587,10 +599,74 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage2.Size = new System.Drawing.Size(619, 401);
+            this.tabPage2.Size = new System.Drawing.Size(619, 471);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.MouseEnter += new System.EventHandler(this.tt_Leave);
+            // 
+            // dateGhost
+            // 
+            this.dateGhost.Location = new System.Drawing.Point(424, 342);
+            this.dateGhost.Name = "dateGhost";
+            this.dateGhost.Size = new System.Drawing.Size(145, 20);
+            this.dateGhost.TabIndex = 15;
+            this.dateGhost.Value = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
+            this.dateGhost.ValueChanged += new System.EventHandler(this.dateGhost_ValueChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Calibri", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(235, 340);
+            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(184, 22);
+            this.label16.TabIndex = 14;
+            this.label16.Text = "Дата \"прошлого\" дня:";
+            // 
+            // previousGhost
+            // 
+            this.previousGhost.AutoSize = true;
+            this.previousGhost.Font = new System.Drawing.Font("Calibri", 32F, System.Drawing.FontStyle.Bold);
+            this.previousGhost.Location = new System.Drawing.Point(180, 365);
+            this.previousGhost.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.previousGhost.Name = "previousGhost";
+            this.previousGhost.Size = new System.Drawing.Size(45, 53);
+            this.previousGhost.TabIndex = 12;
+            this.previousGhost.Text = "0";
+            // 
+            // currentGhost
+            // 
+            this.currentGhost.AutoSize = true;
+            this.currentGhost.Font = new System.Drawing.Font("Calibri", 32F, System.Drawing.FontStyle.Bold);
+            this.currentGhost.Location = new System.Drawing.Point(374, 365);
+            this.currentGhost.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.currentGhost.Name = "currentGhost";
+            this.currentGhost.Size = new System.Drawing.Size(45, 53);
+            this.currentGhost.TabIndex = 11;
+            this.currentGhost.Text = "0";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Calibri", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(319, 418);
+            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(158, 22);
+            this.label15.TabIndex = 10;
+            this.label15.Text = "Текущий результат";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Calibri", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(117, 418);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(166, 22);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Прошлый результат";
             // 
             // panel3
             // 
@@ -768,7 +844,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(619, 401);
+            this.tabPage3.Size = new System.Drawing.Size(619, 471);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -788,7 +864,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(591, 486);
+            this.ClientSize = new System.Drawing.Size(591, 556);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -873,6 +949,12 @@
         private System.Windows.Forms.CheckBox repeatPlaylist;
         private System.Windows.Forms.TextBox playlistFolder;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label previousGhost;
+        private System.Windows.Forms.Label currentGhost;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.DateTimePicker dateGhost;
     }
 }
 
